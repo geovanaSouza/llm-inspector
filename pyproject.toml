@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+
+[project]
+name = "llm-inspector"
+version = "0.1.0"
+description = "Prompt Telemetry Engine - An LLM mechanic inspector"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[project.scripts]
+llm-inspector = "main:main"
