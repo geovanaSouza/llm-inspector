@@ -2,6 +2,8 @@
 VENV ?= .venv
 # PYTHON: Python interpreter used by setup (default: $(VENV)/bin/python)
 PYTHON ?= $(VENV)/bin/python
+# Default prompt if none is provided via command line
+PROMPT ?= "Prompt Telemetry Engine - An LLM mechanic inspector"
 
 .PHONY: setup run clean
 
@@ -13,7 +15,7 @@ setup:
 
 # Execute the application
 run:
-	$(PYTHON) main.py
+	$(PYTHON) main.py $(PROMPT)
 
 # Clean temporary files, build artifacts and the virtual environment
 clean:
