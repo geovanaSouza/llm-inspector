@@ -8,7 +8,8 @@ description = "Prompt Telemetry Engine - An LLM mechanic inspector"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "rich>=15.0.0"
+    "rich>=15.0.0",
+    "tiktoken>=0.14.0"
 ]
 
 [project.scripts]
