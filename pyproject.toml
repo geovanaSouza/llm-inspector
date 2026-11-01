@@ -7,6 +7,9 @@ version = "0.1.0"
 description = "Prompt Telemetry Engine - An LLM mechanic inspector"
 readme = "README.md"
 requires-python = ">=3.10"
+dependencies = [
+    "rich>=15.0.0"
+]
 
 [project.scripts]
 llm-inspector = "main:main"
