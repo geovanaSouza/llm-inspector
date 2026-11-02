@@ -2,8 +2,10 @@
 VENV ?= .venv
 # PYTHON: Python interpreter used by setup (default: $(VENV)/bin/python)
 PYTHON ?= $(VENV)/bin/python
-# Default prompt if none is provided via command line
-PROMPT ?= "Prompt Telemetry Engine - An LLM mechanic inspector"
+# Default prompt 1 if none is provided via command line
+PROMPT1 ?= "What is the role of temperature in LLMs?"
+# Default prompt 2 if none is provided via command line
+PROMPT2 ?= "How does temperature affect randomness in language models?"
 
 .PHONY: setup run clean
 
@@ -15,7 +17,7 @@ setup:
 
 # Execute the application
 run:
-	$(PYTHON) main.py $(PROMPT)
+	$(PYTHON) main.py $(PROMPT1) $(PROMPT2)
 
 # Clean temporary files, build artifacts and the virtual environment
 clean:
