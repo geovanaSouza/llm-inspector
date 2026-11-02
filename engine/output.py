@@ -35,12 +35,12 @@ def show_token_telemetry(data: dict) -> None:
     colum_styles = ["dim", "green", "yellow"]
 
     rows = [
-        [str(idx+1), repr(chunk)[1:-1], str(tid)]
+        [str(idx+1), chunk["text"], str(tid)]
         for idx, (chunk, tid) in enumerate(zip(data["token_bytes"], data["token_ids"]))
     ]
 
     render_table(
-        title=f"[bold cyan]Tokenization Telemetry[/bold cyan]\n[bold]Model Name:[/bold] {data['model_name']}",
+        title=f"[bold cyan]Tokenization Telemetry[/bold cyan]\n[bold]Model Name:[/bold] {data['model_name']}\n[bold]Provider:[/bold] {data['provider']}",
         headers=headers,
         rows=rows,
         colum_styles=colum_styles,
