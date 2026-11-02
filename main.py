@@ -21,8 +21,12 @@ def main() -> None:
     # Welcome Header
     welcome()
 
-    # Tokenization Execution (analyzing Prompt A)
-    token_data = analyzer_token(prompt_a)
+    # Tokenization Execution (analyzing Prompt A using GPT-4)
+    token_data = analyzer_token(prompt_a, model_name="gpt-4o")
+    show_token_telemetry(token_data)
+
+    # Tokenization Execution (analyzing Prompt A using GPT-4 tokenizer)
+    token_data = analyzer_token(prompt_a, model_name="sentence-transformers/all-MiniLM-L6-v2")
     show_token_telemetry(token_data)
 
     # Embedding & Similarity Comparison
