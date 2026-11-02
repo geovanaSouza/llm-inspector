@@ -51,3 +51,26 @@ def show_token_telemetry(data: dict) -> None:
         f"Characters: [cyan]{data['total_chars']}[/cyan] | "
         f"Char/Token Ratio: [cyan]{data['ratio']}[/cyan]\n"
     )
+
+def show_embedding_telemetry(data: dict) -> None:
+    """
+    Formats embedding similarity data and display it using render_table.
+    """
+    headers = ["Property", "Value"]
+    colum_styles = ["bold yellow", "cyan"]
+
+    rows = [
+        ["Text A (Prompt)", data["text_a"]],
+        ["Text B (Reference)", data["text_b"]],
+        ["Vector Dimensions", str(data["vector_dim"])],
+        ["Cosine Similarity", f"{data['similarity_score']} ({data['similarity_percentage']}%)"],
+        ["Vector Preview (First 5 dims)", str(data["sample_vector_a"])],
+    ]
+
+    render_table(
+        title=f"[bold cyan]Embedding & Vector Similarity Telemetry[/bold cyan]\n[bold]Transformer Model:[/bold] {data['transformer_model']}",
+        headers=headers,
+        rows=rows,
+        colum_styles=colum_styles,
+    )
+    console.print()
