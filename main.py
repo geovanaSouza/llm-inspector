@@ -1,6 +1,7 @@
-from engine.output import show_token_telemetry, show_embedding_telemetry
-from engine.tokenizer import analyzer_token
 from engine.embeddings import analyze_embeddings
+from engine.logits import analyze_logits
+from engine.output import show_token_telemetry, show_embedding_telemetry, show_logit_telemetry, show_logit_comparison
+from engine.tokenizer import analyzer_token
 from rich.console import Console
 from rich.panel import Panel
 import sys
@@ -32,6 +33,16 @@ def main() -> None:
     # Embedding & Similarity Comparison
     embedding_data = analyze_embeddings(prompt_a,prompt_b)
     show_embedding_telemetry(embedding_data)
+
+    # Logits (Prompt A, two models, then a side-by-side comparison)
+    logits_result = [
+        analyze_logits(prompt_a, model_name="gpt2"),
+        analyze_logits(prompt_a, model_name="Qwen/Qwen3-1.7B-Base"),
+    ]
+
+    for result in logits_result:
+        show_logit_telemetry(result)
+    show_logit_comparison(logits_result)
 
 def welcome():
     '''Displays the initial header for the Prompt Telemetry Engine.'''

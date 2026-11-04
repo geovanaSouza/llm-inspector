@@ -74,3 +74,50 @@ def show_embedding_telemetry(data: dict) -> None:
         colum_styles=colum_styles,
     )
     console.print()
+
+def show_logit_telemetry(data: dict) -> None:
+    """
+    Formats logits data and display it using render_table.
+    """
+    headers = ["Rank", "Token Text", "Token ID", "Raw Logit", "Baseline Prob(%)"]
+    rows = [
+        [
+            str(c["rank"]),
+            c["token_text"],
+            str(c["token_id"]),
+            f"{c['raw_logit']:.4f}",
+            f"{c['baseline_probability'] * 100:.2f}%"
+        ]
+        for c in data["candidates"]
+    ]
+
+    title = (
+        f"[bold cyan]Logits Telemetry[/bold cyan]\n"
+        f"[bold]Model:[/bold] {data['model_name']}\n"
+        f"[bold]Prompt:[/bold] {data['prompt']}"
+    )
+    render_table(headers=headers, rows=rows, title=title)
+
+def show_logit_comparison(results: Sequence[dict]) -> None:
+    """
+    Side-by-side summary of the same prompt across models.
+    """
+    headers = ["Metric"] + [r["model_name"] for r in results]
+
+    metrics = [
+        ("Top-1 token",                  lambda r: r["candidates"][0]["token_text"]),
+        ("Top-1 probability",            lambda r: f"{r['candidates'][0]['baseline_probability'] * 100:.2f}%"),
+        ("Top-10 coverage",              lambda r: f"{r['top_k_mass'] * 100:.2f}%"),
+        ("Nucleus (90%)",                lambda r: f"{r['nucleus_90_size']:,} tokens"),
+        ("Equivalent number of choices", lambda r: f"{2 ** r['entropy_bits']:.0f}"),
+        ("Vocabulary",                   lambda r: f"{r['vocab_size']:,}"),
+    ]
+
+    rows = [[name] + [fmt(r) for r in results] for name, fmt in metrics]
+
+    render_table(
+        title=f"[bold cyan]Logits Comparison[/bold cyan]\n[bold]Prompt:[/bold] {results[0]['prompt']}",
+        headers=headers,
+        rows=rows,
+        colum_styles=["bold yellow"] + ["cyan"] * len(results),
+    )
