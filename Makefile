@@ -3,7 +3,7 @@ VENV ?= .venv
 # PYTHON: Python interpreter used by setup (default: $(VENV)/bin/python)
 PYTHON ?= $(VENV)/bin/python
 # Default prompt 1 if none is provided via command line
-PROMPT1 ?= "What is the role of temperature in LLMs?"
+PROMPT1 ?= "The role of temperature in LLMs is to"
 # Default prompt 2 if none is provided via command line
 PROMPT2 ?= "How does temperature affect randomness in language models?"
 

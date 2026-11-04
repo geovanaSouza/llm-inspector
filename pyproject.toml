@@ -12,7 +12,8 @@ dependencies = [
     "tiktoken>=0.14.0",
     "numpy>=2.5.4",
     "sentence-transformers>=6.2.0",
-    "transformers>=5.22.1"
+    "transformers>=5.22.1",
+    "torch>=2.15.0"
 ]
 
 [project.scripts]
