@@ -1,6 +1,6 @@
 from engine.embeddings import analyze_embeddings
 from engine.logits import get_raw_logits
-from engine.output import show_token_telemetry, show_embedding_telemetry, show_logit_panel, show_baseline_table, show_logits_comparison
+from engine.output import show_token_telemetry, show_embedding_telemetry, show_logit_panel, show_sampling_table, show_logits_comparison
 from engine.sampling import analyze_sampling
 from engine.tokenizer import analyzer_token
 from rich.console import Console
@@ -50,7 +50,7 @@ def main() -> None:
                 tokenizer,
                 temp
             )
-            show_baseline_table(result, model=model)
+            show_sampling_table(result, model=model)
 
             logits_results.append({
             "model_name": logits["model_name"],

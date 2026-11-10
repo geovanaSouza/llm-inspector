@@ -87,22 +87,23 @@ def show_logit_panel(prompt: str) -> None:
         )
     )
 
-def show_baseline_table(data: dict, model: str) -> None:
+def show_sampling_table(data: dict, model: str) -> None:
     """
-    Displays the baseline candidate table for one model's raw logits.
+    Displays the sample table for one model's raw logits.
     """
     title = (
-        f"[bold cyan]Raw Logits Table[/bold cyan]\n"
+        f"[bold cyan]Sampling Table (T={data['temperature']})[/bold cyan]\n"
         f"[bold]Model:[/bold] {model}"
     )
-    headers = ["Rank", "Token Text", "Token ID", "Raw Logit", "Baseline Prob(%)"]
+    headers = ["Rank", "Token Text", "Token ID", "Raw Logit", "Baseline Prob(%)", "Sampled Prob (%)"]
     rows = [
         [
             str(c["rank"]),
             c["token_text"],
             str(c["token_id"]),
             f"{c['raw_logit']:.4f}",
-            f"{c['baseline_probability'] * 100:.2f}%"
+            f"{c['baseline_probability'] * 100:.2f}%",
+            f"{c['sampled_probability'] * 100:.2f}%"
         ]
         for c in data["candidates"]
     ]
@@ -117,7 +118,7 @@ def show_logits_comparison(results: Sequence[dict]) -> None:
 
     metrics = [
         ("Top-1 token",                  lambda r: r["candidates"][0]["token_text"]),
-        ("Top-1 probability",            lambda r: f"{r['candidates'][0]['baseline_probability'] * 100:.2f}%"),
+        ("Top-1 probability",            lambda r: f"{r['candidates'][0]['sampled_probability'] * 100:.2f}%"),
         ("Top-10 coverage",              lambda r: f"{r['top_k_mass'] * 100:.2f}%"),
         ("Nucleus (90%)",                lambda r: f"{r['nucleus_90_size']:,} tokens"),
         ("Equivalent number of choices", lambda r: f"{2 ** r['entropy_bits']:.0f}"),
