@@ -87,22 +87,23 @@ def show_logit_panel(prompt: str) -> None:
         )
     )
 
-def show_baseline_table(data: dict, model: str) -> None:
+def show_sampling_table(data: dict, model: str) -> None:
     """
-    Displays the baseline candidate table for one model's raw logits.
+    Displays the sample table for one model's raw logits.
     """
     title = (
-        f"[bold cyan]Raw Logits Table[/bold cyan]\n"
+        f"[bold cyan]Sampling Table (T={data['temperature']})[/bold cyan]\n"
         f"[bold]Model:[/bold] {model}"
     )
-    headers = ["Rank", "Token Text", "Token ID", "Raw Logit", "Baseline Prob(%)"]
+    headers = ["Rank", "Token Text", "Token ID", "Raw Logit", "Baseline Prob(%)", "Sampled Prob (%)"]
     rows = [
         [
             str(c["rank"]),
             c["token_text"],
             str(c["token_id"]),
             f"{c['raw_logit']:.4f}",
-            f"{c['baseline_probability'] * 100:.2f}%"
+            f"{c['baseline_probability'] * 100:.2f}%",
+            f"{c['sampled_probability'] * 100:.2f}%"
         ]
         for c in data["candidates"]
     ]
@@ -111,13 +112,13 @@ def show_baseline_table(data: dict, model: str) -> None:
 
 def show_logits_comparison(results: Sequence[dict]) -> None:
     """
-    Side-by-side summary of the same prompt across models.
+    Side-by-side summary comparing different models across different sampling temperatures.
     """
-    headers = ["Metric"] + [r["model_name"] for r in results]
+    headers = ["Metric"] + [f"{r['model_name']} (T={r['temperature']})" for r in results]
 
     metrics = [
         ("Top-1 token",                  lambda r: r["candidates"][0]["token_text"]),
-        ("Top-1 probability",            lambda r: f"{r['candidates'][0]['baseline_probability'] * 100:.2f}%"),
+        ("Top-1 probability",            lambda r: f"{r['candidates'][0]['sampled_probability'] * 100:.2f}%"),
         ("Top-10 coverage",              lambda r: f"{r['top_k_mass'] * 100:.2f}%"),
         ("Nucleus (90%)",                lambda r: f"{r['nucleus_90_size']:,} tokens"),
         ("Equivalent number of choices", lambda r: f"{2 ** r['entropy_bits']:.0f}"),
@@ -127,7 +128,7 @@ def show_logits_comparison(results: Sequence[dict]) -> None:
     rows = [[name] + [fmt(r) for r in results] for name, fmt in metrics]
 
     render_table(
-        title="[bold cyan]Logits Comparison[/bold cyan]",
+        title="[bold cyan]Model & Temperature Comparison Matrix[/bold cyan]",
         headers=headers,
         rows=rows,
         colum_styles=["bold yellow"] + ["cyan"] * len(results),
