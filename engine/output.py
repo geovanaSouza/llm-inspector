@@ -1,6 +1,7 @@
 from typing import Sequence, Any, Optional
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
 
 console = Console()
 
@@ -75,10 +76,25 @@ def show_embedding_telemetry(data: dict) -> None:
     )
     console.print()
 
-def show_logit_telemetry(data: dict) -> None:
+def show_logit_panel(prompt: str) -> None:
     """
     Formats logits data and display it using render_table.
     """
+    console.print(
+        Panel(
+            f"[bold]Prompt:[/bold] {prompt}",
+            title="[bold blue]Logits Telemetry[/bold blue]"
+        )
+    )
+
+def show_baseline_table(data: dict, model: str) -> None:
+    """
+    Displays the baseline candidate table for one model's raw logits.
+    """
+    title = (
+        f"[bold cyan]Raw Logits Table[/bold cyan]\n"
+        f"[bold]Model:[/bold] {model}"
+    )
     headers = ["Rank", "Token Text", "Token ID", "Raw Logit", "Baseline Prob(%)"]
     rows = [
         [
@@ -91,14 +107,9 @@ def show_logit_telemetry(data: dict) -> None:
         for c in data["candidates"]
     ]
 
-    title = (
-        f"[bold cyan]Logits Telemetry[/bold cyan]\n"
-        f"[bold]Model:[/bold] {data['model_name']}\n"
-        f"[bold]Prompt:[/bold] {data['prompt']}"
-    )
     render_table(headers=headers, rows=rows, title=title)
 
-def show_logit_comparison(results: Sequence[dict]) -> None:
+def show_logits_comparison(results: Sequence[dict]) -> None:
     """
     Side-by-side summary of the same prompt across models.
     """
@@ -116,7 +127,7 @@ def show_logit_comparison(results: Sequence[dict]) -> None:
     rows = [[name] + [fmt(r) for r in results] for name, fmt in metrics]
 
     render_table(
-        title=f"[bold cyan]Logits Comparison[/bold cyan]\n[bold]Prompt:[/bold] {results[0]['prompt']}",
+        title="[bold cyan]Logits Comparison[/bold cyan]",
         headers=headers,
         rows=rows,
         colum_styles=["bold yellow"] + ["cyan"] * len(results),

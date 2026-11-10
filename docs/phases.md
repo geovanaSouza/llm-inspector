@@ -6,7 +6,7 @@ The tool runs three phases, in this order. Each one asks a different question an
 |---|---|---|---|
 | **Tokenization** | "How is this text split?" | Only the vocabulary table | `engine/tokenizer.py` |
 | **Embeddings** | "Are these two texts similar?" | A complete *encoder*, but small | `engine/embeddings.py` |
-| **Logits** | "What is the next token, and how likely?" | The full weights of a generative model | `engine/logits.py` |
+| **Logits** | "What is the next token, and how likely?" | The full weights of a generative model | `engine/logits.py` · `engine/sampling.py` |
 
 ---
 

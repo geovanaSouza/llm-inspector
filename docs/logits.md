@@ -18,6 +18,13 @@ A **logit** is the raw score the model gives to **every token in its vocabulary*
 
 The model produces a full vector of `V` scores at **every** position — for a 7-token prompt that is 7 × 151,936 numbers. All are discarded except the last, because only the last one predicts the next token.
 
+The five steps run in two functions:
+
+```
+engine/logits.py    get_raw_logits           -> steps 1-3: model forward pass, raw scores
+engine/sampling.py  build_sampling_baseline  -> steps 4-5: softmax (T=1), top-k and the metrics
+```
+
 ---
 
 ## The three summary numbers
