@@ -1,6 +1,7 @@
 from engine.embeddings import analyze_embeddings
-from engine.logits import analyze_logits
-from engine.output import show_token_telemetry, show_embedding_telemetry, show_logit_telemetry, show_logit_comparison
+from engine.logits import get_raw_logits
+from engine.output import show_token_telemetry, show_embedding_telemetry, show_logit_panel, show_baseline_table, show_logits_comparison
+from engine.sampling import build_sampling_baseline
 from engine.tokenizer import analyzer_token
 from rich.console import Console
 from rich.panel import Panel
@@ -34,22 +35,26 @@ def main() -> None:
     embedding_data = analyze_embeddings(prompt_a,prompt_b)
     show_embedding_telemetry(embedding_data)
 
-    # Logits (Prompt A, two models, then a side-by-side comparison)
-    logits_result = [
-        analyze_logits(prompt_a, model_name="gpt2"),
-        analyze_logits(prompt_a, model_name="Qwen/Qwen3-1.7B-Base"),
-    ]
+    # Logits + Sampling baseline (Prompt A, two models, then a side-by-side comparison)
+    show_logit_panel(prompt_a)
+    logits_results = []
+    for model in ["gpt2", "Qwen/Qwen3-1.7B-Base"]:
+        logits = get_raw_logits(prompt_a, model_name=model)
+        baseline = build_sampling_baseline(logits['raw_logits'], logits['tokenizer'])
+        show_baseline_table(baseline, model=model)
 
-    for result in logits_result:
-        show_logit_telemetry(result)
-    show_logit_comparison(logits_result)
+        logits_results.append({
+            "model_name": logits["model_name"],
+            "vocab_size": logits['vocab_size'],
+            **baseline,
+        })
+    show_logits_comparison(logits_results)
 
 def welcome():
     '''Displays the initial header for the Prompt Telemetry Engine.'''
     console.print(
         Panel(
-            f"[bold green]Prompt Telemetry Engine Initialized![/bold green]\n"
-            f"",
+            "[bold green]Prompt Telemetry Engine Initialized![/bold green]\n",
             title="[bold blue]LLM Inspector[/bold blue]"
         )
     )
