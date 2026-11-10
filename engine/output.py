@@ -111,9 +111,9 @@ def show_baseline_table(data: dict, model: str) -> None:
 
 def show_logits_comparison(results: Sequence[dict]) -> None:
     """
-    Side-by-side summary of the same prompt across models.
+    Side-by-side summary comparing different models across different sampling temperatures.
     """
-    headers = ["Metric"] + [r["model_name"] for r in results]
+    headers = ["Metric"] + [f"{r['model_name']} (T={r['temperature']})" for r in results]
 
     metrics = [
         ("Top-1 token",                  lambda r: r["candidates"][0]["token_text"]),
@@ -127,7 +127,7 @@ def show_logits_comparison(results: Sequence[dict]) -> None:
     rows = [[name] + [fmt(r) for r in results] for name, fmt in metrics]
 
     render_table(
-        title="[bold cyan]Logits Comparison[/bold cyan]",
+        title="[bold cyan]Model & Temperature Comparison Matrix[/bold cyan]",
         headers=headers,
         rows=rows,
         colum_styles=["bold yellow"] + ["cyan"] * len(results),
